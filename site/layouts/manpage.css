@@ -1,0 +1,852 @@
+/*
+ * man page: the portfolio as a Unix manual page. One column, bold capital
+ * section headings (NAME, AUTHOR, INSTRUMENTS), bodies indented by 7 columns
+ * (the troff default). Controls are ASCII bars, the status line is `less`'s prompt.
+ */
+
+/* ---- text-layout base: monospace, no cards or chips, commands as [words] ---- */
+:root[data-layout='manpage'] {
+  --cp-radius: 0px;
+  --cp-radius-sm: 0px;
+  --cp-shadow: none;
+  --cp-font: var(--cp-mono);
+  --site-display: var(--cp-mono);
+  --cp-text-xs: 12px;
+  --cp-text-sm: 13px;
+  --cp-text-md: 14px;
+  --cp-editor-font-size: 13.5px;
+
+  & body {
+    font-family: var(--cp-mono);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  & :focus-visible {
+    outline: 1px solid var(--cp-accent);
+    outline-offset: 1px;
+  }
+
+  & ::selection {
+    color: var(--cp-bg);
+    background: var(--cp-accent);
+  }
+
+  /* Header: no band, just text. */
+  & .site-header {
+    background: transparent;
+    border-bottom: 0;
+  }
+  & .site-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  & .site-bio {
+    margin-top: 2px;
+    max-width: 80ch;
+  }
+  & .site-link,
+  & .site-theme,
+  & .chip,
+  & .stage__link {
+    height: auto;
+    padding: 0;
+    font: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    color: var(--cp-accent);
+    background: none;
+    border: 0;
+    border-radius: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  & .site-link::before,
+  & .site-theme::before,
+  & .stage__link::before {
+    content: '[';
+    content: '[' / '';
+    color: var(--cp-muted);
+  }
+  & .site-link::after,
+  & .site-theme::after,
+  & .stage__link::after {
+    content: ']';
+    content: ']' / '';
+    color: var(--cp-muted);
+  }
+  & .site-link:hover,
+  & .site-theme:hover,
+  & .stage__link:hover,
+  & .chip:hover {
+    text-decoration: underline;
+  }
+  & .site-header__side {
+    gap: 4px 2ch;
+  }
+  & .site-links {
+    gap: 4px 2ch;
+  }
+
+  /* Tag filter: "all #fm #bells", the active one in reverse video. */
+  & .chips {
+    gap: 2px 1.5ch;
+  }
+  & .chip {
+    padding: 0 2px;
+    color: var(--cp-muted);
+  }
+  & .chip[aria-pressed='true'] {
+    color: var(--cp-bg);
+    background: var(--cp-accent);
+    text-decoration: none;
+  }
+
+  /* Instrument list: lines, not cards. */
+  & .rack {
+    gap: 6px;
+  }
+  & .rack__list {
+    gap: 0;
+  }
+  & .card {
+    gap: 0;
+    padding: 4px 1ch;
+    color: var(--cp-text);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  & .card:hover {
+    background: var(--cp-surface-2);
+  }
+  & .card[aria-current='true'] {
+    box-shadow: none;
+  }
+  & .card__preview {
+    display: none;
+  }
+  & .card__body {
+    gap: 0;
+  }
+  & .card__title {
+    font-weight: 700;
+  }
+  & .card__desc {
+    font-size: 13px;
+  }
+
+  /* Stage */
+  & .stage {
+    gap: 10px;
+  }
+  & .stage__title {
+    font-size: 15px;
+    letter-spacing: 0;
+  }
+  & .stage__desc {
+    max-width: 80ch;
+  }
+  & .stage__meta {
+    gap: 2px 2ch;
+    font-size: 13px;
+  }
+  & .tag {
+    padding: 0;
+    font-size: inherit;
+    color: var(--cp-muted);
+    background: none;
+    border-radius: 0;
+  }
+  & .tag::before {
+    content: '#';
+    content: '#' / '';
+  }
+  & .stage__facts {
+    font-size: inherit;
+  }
+
+  /* Player: square, flat, commands as [words]. */
+  & .cp-player {
+    background: var(--cp-bg);
+  }
+  & .cp-toolbar {
+    gap: 2px 1.5ch;
+    padding: 4px 1ch;
+    background: var(--cp-surface);
+  }
+  & .cp-toolbar .cp-btn,
+  & .cp-more__button {
+    height: 24px;
+    padding: 0 2px;
+    font-family: var(--cp-mono);
+    font-size: var(--cp-text-sm);
+    font-weight: 400;
+    color: var(--cp-text);
+    background: transparent;
+    border: 0;
+  }
+  & .cp-toolbar .cp-btn::before {
+    content: '[';
+    content: '[' / '';
+    color: var(--cp-muted);
+  }
+  & .cp-toolbar .cp-btn::after {
+    content: ']';
+    content: ']' / '';
+    color: var(--cp-muted);
+  }
+  & .cp-toolbar .cp-btn .cp-icon {
+    display: none;
+  }
+  & .cp-toolbar .cp-btn:hover:not(:disabled) {
+    background: var(--cp-surface-2);
+  }
+  & .cp-toolbar .cp-btn[aria-pressed='true'],
+  & .cp-more__button[aria-expanded='true'] {
+    color: var(--cp-accent);
+    background: transparent;
+  }
+  & .cp-toolbar .cp-btn--transport {
+    font-weight: 700;
+    color: var(--cp-accent);
+  }
+  & .cp-toolbar .cp-btn--transport.is-playing,
+  & .cp-toolbar .cp-btn--transport.is-playing:hover:not(:disabled) {
+    color: var(--cp-bg);
+    background: var(--cp-accent);
+  }
+  & .cp-toolbar .cp-btn--transport.is-playing::before,
+  & .cp-toolbar .cp-btn--transport.is-playing::after {
+    color: inherit;
+  }
+  & .cp-toolbar .cp-btn--transport span {
+    text-transform: lowercase;
+  }
+  & .cp-toolbar .cp-btn--apply {
+    color: var(--cp-warn);
+  }
+  & .cp-badge {
+    margin-left: 0.5ch;
+    padding: 0 0.5ch;
+    border-radius: 0;
+  }
+  & .cp-more__panel {
+    border-color: var(--cp-text);
+    background: var(--cp-bg);
+  }
+  & .cp-splitter {
+    background: var(--cp-border);
+  }
+  & .cp-player__board {
+    background: var(--cp-bg);
+  }
+  & .cp-board__title {
+    font-family: var(--cp-mono);
+    font-weight: 700;
+    color: var(--cp-text);
+  }
+  & .cp-console__title {
+    font-family: var(--cp-mono);
+  }
+  /* The keyboard sets its own key colours; layouts pass theirs in. */
+  & .cp-midi-keyboard {
+    --cp-key-white: var(--lk-white);
+    --cp-key-black: var(--lk-black);
+  }
+  & .cp-midi-key--white,
+  & .cp-midi-key--black {
+    border-radius: 0;
+  }
+  & .cp-xypad {
+    border-radius: 0;
+  }
+
+}
+
+/* Shared timeline and view switch for the text layouts. */
+:root[data-layout='manpage'] {
+  & .rack__view {
+    padding: 0 2px;
+    font-size: inherit;
+    border: 0;
+    border-radius: 0;
+  }
+  & .rack__view[aria-pressed='true'] {
+    color: var(--cp-bg);
+    background: var(--cp-accent);
+  }
+  & .rack__year {
+    padding: 10px 0 2px;
+    font-size: inherit;
+    font-weight: 700;
+    color: var(--cp-text);
+  }
+  & .rack--timeline .card__date {
+    font-size: inherit;
+  }
+}
+
+/* ---- man page ---- */
+:root[data-layout='manpage'] {
+  --cp-bg: #fbfaf5;
+  --cp-surface: #f5f3ec;
+  --cp-surface-2: #ebe8de;
+  --cp-border: #d6d2c6;
+  --cp-text: #171717;
+  --cp-muted: #5c5a55;
+  --cp-accent: #a3271b;
+  --cp-accent-soft: #f4e2dc;
+  --cp-on-accent: #fbfaf5;
+  --cp-track: #d6d2c6;
+  --cp-ok: #2f6f3a;
+  --cp-warn: #8a5a00;
+  --cp-danger: #a3271b;
+  --lk-white: #ffffff;
+  --lk-black: #171717;
+  --lk-pressed: #a3271b;
+  --cp-editor-bg: #fbfaf5;
+  --cp-editor-active-line: #f2efe6;
+  --cp-editor-selection: #f0d9d2;
+  --cp-syn-keyword: #171717;
+  --cp-syn-tag: #5c5a55;
+  --cp-syn-opcode: #171717;
+  --cp-syn-variable: #3a3a3a;
+  --cp-syn-string: #2f6f3a;
+  --cp-syn-number: #a3271b;
+  --cp-syn-comment: #77736b;
+  --cp-syn-operator: #3a3a3a;
+  --cp-syn-meta: #a3271b;
+  --cp-syn-meta-bg: transparent;
+  --cp-statusline-bg: #171717;
+  --cp-statusline-text: #fbfaf5;
+  --cp-cell-on: '#';
+  --cp-cell-off: '-';
+  --man-indent: 7ch;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-layout='manpage']:not([data-theme='light']) {
+    --cp-bg: #141414;
+    --cp-surface: #1a1a1a;
+    --cp-surface-2: #242424;
+    --cp-border: #383838;
+    --cp-text: #d9d9d6;
+    --cp-muted: #9a9893;
+    --cp-accent: #ec8c74;
+    --cp-accent-soft: #3a2420;
+    --cp-on-accent: #141414;
+    --cp-track: #383838;
+    --cp-ok: #8fcf98;
+    --cp-warn: #e5b664;
+    --cp-danger: #ec8c74;
+    --lk-white: #e8e6df;
+    --lk-black: #141414;
+    --lk-pressed: #b23a22;
+    --cp-editor-bg: #141414;
+    --cp-editor-active-line: #1c1c1c;
+    --cp-editor-selection: #4a2c25;
+    --cp-syn-keyword: #f2f2ef;
+    --cp-syn-tag: #9a9893;
+    --cp-syn-opcode: #f2f2ef;
+    --cp-syn-variable: #c4c4c0;
+    --cp-syn-string: #8fcf98;
+    --cp-syn-number: #ec8c74;
+    --cp-syn-comment: #85837e;
+    --cp-syn-operator: #c4c4c0;
+    --cp-syn-meta: #ec8c74;
+    --cp-syn-meta-bg: transparent;
+    --cp-statusline-bg: #d9d9d6;
+    --cp-statusline-text: #141414;
+    color-scheme: dark;
+  }
+}
+:root[data-layout='manpage'][data-theme='dark'] {
+  --cp-bg: #141414;
+  --cp-surface: #1a1a1a;
+  --cp-surface-2: #242424;
+  --cp-border: #383838;
+  --cp-text: #d9d9d6;
+  --cp-muted: #9a9893;
+  --cp-accent: #ec8c74;
+  --cp-accent-soft: #3a2420;
+  --cp-on-accent: #141414;
+  --cp-track: #383838;
+  --cp-ok: #8fcf98;
+  --cp-warn: #e5b664;
+  --cp-danger: #ec8c74;
+  --lk-white: #e8e6df;
+  --lk-black: #141414;
+  --lk-pressed: #b23a22;
+  --cp-editor-bg: #141414;
+  --cp-editor-active-line: #1c1c1c;
+  --cp-editor-selection: #4a2c25;
+  --cp-syn-keyword: #f2f2ef;
+  --cp-syn-tag: #9a9893;
+  --cp-syn-opcode: #f2f2ef;
+  --cp-syn-variable: #c4c4c0;
+  --cp-syn-string: #8fcf98;
+  --cp-syn-number: #ec8c74;
+  --cp-syn-comment: #85837e;
+  --cp-syn-operator: #c4c4c0;
+  --cp-syn-meta: #ec8c74;
+  --cp-syn-meta-bg: transparent;
+  --cp-statusline-bg: #d9d9d6;
+  --cp-statusline-text: #141414;
+  color-scheme: dark;
+}
+
+/* Page structure: section headings in bold capitals, flush left; bodies indented
+   by 7 columns (the troff default). */
+:root[data-layout='manpage'] {
+  --site-max: 104ch;
+  --cp-player-height: min(78vh, 720px);
+  /* The player is wider than the 80-column text, with an even margin on both sides. */
+  --man-wide: min(calc(100vw - 2 * max(24px, 4vw) - 16px), 1480px);
+
+  & .cm-content {
+    font-weight: 400;
+  }
+
+  & .site-header__inner,
+  & .site-main {
+    display: block;
+    padding-block: 0;
+  }
+  & .site-header__inner {
+    padding-block: 24px 0;
+  }
+
+  /* AUTHOR: the name, the photo, then the site's title and bio as one line. */
+  & .site-id {
+    display: block;
+    max-width: none;
+    padding-left: var(--man-indent);
+  }
+  & .site-id::before {
+    content: 'AUTHOR';
+    content: 'AUTHOR' / '';
+    display: block;
+    margin-left: calc(-1 * var(--man-indent));
+    font-weight: 700;
+    color: var(--cp-text);
+  }
+  /* Without a name the section describes the site rather than a person. */
+  & .site-id:has(> .site-author[hidden])::before {
+    content: 'NAME';
+    content: 'NAME' / '';
+  }
+  & .site-author {
+    display: block;
+    margin: 0;
+  }
+  & .site-profile {
+    margin: 8px 0 10px;
+  }
+  /* The photo as a halftone print: greyscale, a little contrast, a thin frame. */
+  & .site-profile__photo,
+  & .site-profile__initials {
+    display: block;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border: 1px solid var(--cp-text);
+  }
+  & .site-profile__photo {
+    filter: grayscale(1) contrast(1.15);
+  }
+  & .site-profile__initials {
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--cp-text);
+  }
+  & .site-profile__initials[hidden],
+  & .site-profile__photo[hidden],
+  & .site-profile[hidden] {
+    display: none;
+  }
+  & .site-title,
+  & .site-bio {
+    display: inline;
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--cp-text);
+  }
+  & .site-title {
+    font-weight: 700;
+  }
+  & .site-bio::before {
+    content: ' \2014  ';
+    content: ' \2014  ' / '';
+  }
+  & .site-header__side {
+    top: 20px;
+  }
+  /* The theme switch: a bracketed glyph like the other commands. */
+  & .site-theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  & .site-theme svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  & .rack,
+  & .stage {
+    position: static;
+    max-height: none;
+    margin-top: 24px;
+  }
+
+  /* INSTRUMENTS / HISTORY: the heading itself folds the section. */
+  & .rack__bar {
+    justify-content: flex-start;
+    gap: 3ch;
+  }
+  & .rack__title,
+  & .stage__title {
+    margin: 0 0 4px;
+    font-size: inherit;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--cp-text);
+  }
+  & .rack__toggle {
+    display: inline-flex;
+    gap: 1ch;
+    padding: 0;
+    font: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  & .rack__toggle:hover #rack-title-text {
+    text-decoration: underline;
+  }
+  & .rack__toggle-icon::before {
+    content: '[-]';
+    content: '[-]' / '';
+    font-weight: 400;
+    color: var(--cp-muted);
+  }
+  & .rack--collapsed .rack__toggle-icon::before {
+    content: '[+]';
+    content: '[+]' / '';
+  }
+  & .rack__count {
+    font-weight: 400;
+    color: var(--cp-muted);
+  }
+  & .rack__count::before {
+    content: '(';
+    content: '(' / '';
+  }
+  & .rack__count::after {
+    content: ')';
+    content: ')' / '';
+  }
+  & .rack__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: var(--man-indent);
+  }
+  & .rack__body[hidden] {
+    display: none;
+  }
+
+  /* [x] info  [filter] */
+  & .rack__options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 3ch;
+  }
+  & .rack__info {
+    display: inline-flex;
+    gap: 0.5ch;
+    cursor: pointer;
+    color: var(--cp-text);
+  }
+  & .rack__info input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  & .rack__info span::before {
+    content: '[ ] ';
+    content: '[ ] ' / '';
+    white-space: pre;
+    color: var(--cp-muted);
+  }
+  & .rack__info input:checked + span::before {
+    content: '[x] ';
+    content: '[x] ' / '';
+    color: var(--cp-accent);
+  }
+  & .rack__info input:focus-visible + span {
+    outline: 1px solid var(--cp-accent);
+    outline-offset: 2px;
+  }
+  & .filter {
+    flex: 0 1 auto;
+  }
+  /* Open, the tag list takes its own line below [x] info, filter and List/Timeline. */
+  & .filter[open] {
+    flex-basis: 100%;
+    order: 1;
+  }
+  & .filter[hidden] {
+    display: none;
+  }
+  & .filter__summary {
+    display: inline;
+    list-style: none;
+    cursor: pointer;
+    color: var(--cp-text);
+  }
+  & .filter__summary::-webkit-details-marker {
+    display: none;
+  }
+  & .filter__summary::before {
+    content: '[+] ';
+    content: '[+] ' / '';
+    white-space: pre;
+    color: var(--cp-muted);
+  }
+  & .filter[open] .filter__summary::before {
+    content: '[-] ';
+    content: '[-] ' / '';
+  }
+  & .filter__summary {
+    text-transform: lowercase;
+  }
+  & .filter__active {
+    color: var(--cp-accent);
+  }
+  & .filter .chips {
+    margin: 4px 0 0 4ch;
+  }
+
+  & .rack__list {
+    flex-direction: column;
+    overflow: visible;
+    padding: 0;
+  }
+  & .rack__list > li {
+    flex: none;
+  }
+  & .rack__readout {
+    display: none;
+  }
+
+  /* Entries: the file name; with [x] info, the description indented below. */
+  & .card {
+    padding: 2px 0;
+    background: transparent;
+  }
+  & .card:hover {
+    background: transparent;
+  }
+  & .card:hover .card__file {
+    text-decoration: underline;
+  }
+  & .card__body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 2ch;
+  }
+  & .card__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  & .card__file {
+    display: block;
+    font-weight: 700;
+  }
+  & .card[aria-current='true'] .card__file {
+    color: var(--cp-accent);
+  }
+  & .card[aria-current='true'] .card__file::after {
+    content: '  \2190';
+    content: '  \2190' / '';
+    font-weight: 400;
+  }
+  & .card__desc,
+  & .card__tags {
+    display: none;
+  }
+  & .rack--info .card__desc {
+    display: block;
+    grid-column: 1 / -1;
+    padding-left: var(--man-indent);
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--cp-text);
+    -webkit-line-clamp: unset;
+  }
+  & .rack--info .card {
+    padding: 4px 0;
+  }
+
+  /* Timeline: HISTORY, one paragraph per year. */
+  & .rack__year {
+    padding-top: 8px;
+  }
+  & .rack--timeline .card__date {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 400;
+    color: var(--cp-muted);
+  }
+
+  & .stage__info {
+    min-height: 0;
+    gap: 4px;
+  }
+  & .stage__desc,
+  & .stage__meta {
+    margin-left: var(--man-indent);
+  }
+  & .stage__meta {
+    font-size: inherit;
+  }
+  & .stage__desc {
+    color: var(--cp-text);
+  }
+  & .stage .cp-host {
+    width: max(100%, var(--man-wide));
+    margin-top: 10px;
+    margin-left: calc(50% - max(100%, var(--man-wide)) / 2);
+  }
+  & .cp-player {
+    border-color: var(--cp-text);
+  }
+  & .cp-toolbar {
+    background: var(--cp-bg);
+    border-bottom-color: var(--cp-border);
+  }
+  & .cp-tfader__cells::before {
+    content: '[';
+    content: '[' / '';
+    color: var(--cp-muted);
+  }
+  & .cp-tfader__cells::after {
+    content: ']';
+    content: ']' / '';
+    color: var(--cp-muted);
+  }
+  & .cp-cell::before {
+    opacity: 1;
+    color: var(--cp-muted);
+  }
+  & .cp-cell[data-on='true']::before {
+    color: var(--cp-text);
+  }
+  & .cp-statusline {
+    border-top: 0;
+  }
+  & .cp-statusline .cp-status__dot {
+    display: none;
+  }
+  & .cp-statusline .cp-cell[data-on='true']::before,
+  & .cp-statusline .cp-cell::before {
+    color: inherit;
+  }
+  & .cp-board--text .cp-board__title {
+    text-transform: uppercase;
+    letter-spacing: 0;
+    font-size: var(--cp-text-sm);
+  }
+  & .site-main {
+    padding-bottom: 40px;
+  }
+}
+
+/* MIDI keyboard: drawn with box-drawing characters. The keys are the same
+   buttons, made transparent and laid exactly over the drawing: the drawing is
+   --cp-art-cols characters wide and 7 rows high (frame, 3 black rows, 2 white
+   rows, frame), and it shrinks to fit the board. */
+:root[data-layout='manpage'] {
+  & .cp-midi-keyboard {
+    container-type: inline-size;
+    --cp-black-key: 0.75; /* 3 of a white key's 4 characters */
+  }
+  & .cp-midi-keyboard__surface {
+    width: max-content;
+    min-width: 0 !important;
+    height: auto;
+    font-family: var(--cp-mono);
+    /* 0.62em is about one character of the common monospace faces. */
+    font-size: min(14px, calc(100cqw / var(--cp-art-cols) / 0.62));
+    background: var(--lk-white);
+  }
+  & .cp-midi-art {
+    display: block;
+    margin: 0;
+    font: inherit;
+    /* Rows touch, so the box-drawing lines and blocks join up. */
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--lk-black);
+    user-select: none;
+  }
+  & .cp-midi-art b {
+    font-weight: inherit;
+    color: var(--lk-pressed);
+  }
+  /* Half a character in from each side, so key edges sit on the drawing's │ lines;
+     one row down from the top frame. */
+  & .cp-midi-keyboard__whites,
+  & .cp-midi-keyboard__blacks {
+    position: absolute;
+    top: calc(100% / 7);
+    left: 0.5ch;
+    right: 0.5ch;
+    width: auto;
+  }
+  & .cp-midi-keyboard__whites {
+    bottom: calc(100% / 7);
+    height: auto;
+  }
+  & .cp-midi-keyboard__blacks {
+    height: calc(300% / 7);
+  }
+  & .cp-midi-key--white,
+  & .cp-midi-key--black {
+    background: transparent;
+    border-color: transparent;
+    border-radius: 0;
+  }
+  & .cp-midi-key--black {
+    height: 100%;
+  }
+  & .cp-midi-key__label {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  :root[data-layout='manpage'] {
+    --man-indent: 2ch;
+  }
+}

@@ -1,0 +1,24 @@
+# Runs the player's test suite on pull requests and pushes (not needed to publish).
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: .cache/csound
+          key: csound-${{ hashFiles('player/engine/csoundRelease.json') }}
+      - run: npm ci
+      - run: npm run check

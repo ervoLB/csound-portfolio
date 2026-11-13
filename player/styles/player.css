@@ -1,0 +1,569 @@
+/*
+ * Player styles. Everything lives in the `cp` cascade layer, so any unlayered
+ * rule in the portfolio's own CSS overrides it without specificity fights.
+ *
+ * Layout concept: a quiet instrument panel. Neutral surfaces with a slight cool
+ * tint, one cobalt accent for "live" things (values, arcs, playing state), and
+ * monospace numerals for every value Csound sees.
+ *
+ * Theme: light by default; dark via prefers-color-scheme unless
+ * <html data-theme="light"> is set; <html data-theme="dark"> forces dark.
+ */
+@layer cp {
+  :root {
+    --cp-bg: #f6f7f9;
+    --cp-surface: #ffffff;
+    --cp-surface-2: #eef1f5;
+    --cp-border: #d8dde5;
+    --cp-text: #161a21;
+    --cp-muted: #5a6472;
+    --cp-accent: #2d58cf;
+    --cp-accent-soft: #e2e9fb;
+    --cp-on-accent: #ffffff;
+    --cp-track: #dce2ea;
+    --cp-ok: #1d8556;
+    --cp-warn: #a96c12;
+    --cp-danger: #c0392b;
+    --cp-shadow: 0 1px 2px rgb(22 26 33 / 0.06), 0 2px 8px rgb(22 26 33 / 0.05);
+
+    --cp-font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --cp-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, 'Liberation Mono', monospace;
+    --cp-radius: 8px;
+    --cp-radius-sm: 5px;
+    --cp-text-xs: 11px;
+    --cp-text-sm: 12.5px;
+    --cp-text-md: 14px;
+    --cp-text-lg: 17px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --cp-bg: #0f1216;
+      --cp-surface: #161a20;
+      --cp-surface-2: #1c2129;
+      --cp-border: #2b323c;
+      --cp-text: #e6eaf0;
+      --cp-muted: #98a2b0;
+      --cp-accent: #7d9dff;
+      --cp-accent-soft: #1e2944;
+      --cp-on-accent: #0b1020;
+      --cp-track: #2b323c;
+      --cp-ok: #3ecf8e;
+      --cp-warn: #e2aa4c;
+      --cp-danger: #f0735f;
+      --cp-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme='dark'] {
+    --cp-bg: #0f1216;
+    --cp-surface: #161a20;
+    --cp-surface-2: #1c2129;
+    --cp-border: #2b323c;
+    --cp-text: #e6eaf0;
+    --cp-muted: #98a2b0;
+    --cp-accent: #7d9dff;
+    --cp-accent-soft: #1e2944;
+    --cp-on-accent: #0b1020;
+    --cp-track: #2b323c;
+    --cp-ok: #3ecf8e;
+    --cp-warn: #e2aa4c;
+    --cp-danger: #f0735f;
+    --cp-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    color-scheme: dark;
+  }
+
+  /* ---------------------------------------------------------------- widgets */
+
+  .cp-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-family: var(--cp-font);
+    color: var(--cp-text);
+  }
+
+  .cp-widget__label {
+    max-width: 100%;
+    font-size: var(--cp-text-sm);
+    font-weight: 550;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--cp-text);
+    overflow-wrap: anywhere;
+  }
+
+  .cp-widget__value {
+    font-family: var(--cp-mono);
+    font-size: var(--cp-text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--cp-muted);
+    line-height: 1.2;
+    min-height: 1.2em;
+  }
+
+  .cp-widget :focus-visible,
+  .cp-widget:focus-visible {
+    outline: 2px solid var(--cp-accent);
+    outline-offset: 2px;
+    border-radius: var(--cp-radius-sm);
+  }
+
+  /* Knob */
+  .cp-knob {
+    width: var(--cp-knob-size, 56px);
+    height: var(--cp-knob-size, 56px);
+    touch-action: none;
+    cursor: ns-resize;
+    user-select: none;
+    border-radius: 50%;
+  }
+  .cp-knob__track {
+    fill: none;
+    stroke: var(--cp-track);
+    stroke-linecap: round;
+  }
+  .cp-knob__arc {
+    fill: none;
+    stroke: var(--cp-accent);
+    stroke-linecap: round;
+  }
+  .cp-knob__body {
+    fill: var(--cp-surface-2);
+    stroke: var(--cp-border);
+  }
+  .cp-knob__pointer {
+    stroke: var(--cp-text);
+    stroke-linecap: round;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cp-knob__arc,
+    .cp-knob__pointer {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------- widget controls */
+
+  .cp-slider,
+  .cp-label,
+  .cp-button,
+  .cp-checkbox,
+  .cp-toggle,
+  .cp-dropdown,
+  .cp-xypad,
+  .cp-meter,
+  .cp-midi-keyboard {
+    box-sizing: border-box;
+  }
+
+  /* Slider */
+  .cp-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    touch-action: none;
+    user-select: none;
+    cursor: pointer;
+  }
+  .cp-slider--vertical {
+    width: 28px;
+    flex-direction: column;
+  }
+  .cp-slider--horizontal {
+    height: 28px;
+  }
+  .cp-slider__track {
+    position: relative;
+    background: var(--cp-track);
+    border-radius: 999px;
+  }
+  .cp-slider--vertical .cp-slider__track {
+    width: 8px;
+    height: 100%;
+    min-height: 0;
+  }
+  .cp-slider--horizontal .cp-slider__track {
+    height: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+  .cp-slider__fill {
+    position: absolute;
+    border-radius: 999px;
+    background: var(--cp-accent);
+  }
+  .cp-slider--vertical .cp-slider__fill {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  .cp-slider--horizontal .cp-slider__fill {
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
+  .cp-slider__thumb {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cp-surface);
+    border: 2px solid var(--cp-accent);
+    box-shadow: var(--cp-shadow);
+  }
+  .cp-slider--vertical .cp-slider__thumb {
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+  .cp-slider--horizontal .cp-slider__thumb {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Label */
+  .cp-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: var(--cp-text);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+  /* A label showing a channel's value: digits that don't jiggle as they change. */
+  .cp-label--live {
+    font-family: var(--cp-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Button */
+  .cp-button {
+    font-family: var(--cp-font);
+    font-size: var(--cp-text-md);
+    color: var(--cp-text);
+    background: var(--cp-surface-2);
+    border: 1px solid var(--cp-border);
+    border-radius: var(--cp-radius-sm);
+    padding: 6px 12px;
+    min-height: 32px;
+    max-width: 100%;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+  }
+  .cp-button.is-pressed {
+    background: var(--cp-accent);
+    color: var(--cp-on-accent);
+    border-color: var(--cp-accent);
+    box-shadow: inset 0 0 0 2px var(--cp-accent);
+  }
+
+  /* Checkbox */
+  .cp-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    cursor: pointer;
+    user-select: none;
+  }
+  .cp-checkbox__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+  .cp-checkbox__box {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--cp-border);
+    border-radius: var(--cp-radius-sm);
+    background: var(--cp-surface);
+  }
+  .cp-checkbox__input:checked + .cp-checkbox__box {
+    background: var(--cp-accent);
+    border-color: var(--cp-accent);
+  }
+  .cp-checkbox__input:checked + .cp-checkbox__box::after {
+    content: '\2713';
+    color: var(--cp-on-accent);
+    font-size: 12px;
+    line-height: 1;
+  }
+  .cp-checkbox__input:focus-visible + .cp-checkbox__box {
+    outline: 2px solid var(--cp-accent);
+    outline-offset: 2px;
+  }
+  .cp-checkbox__text {
+    max-width: calc(100% - 26px);
+  }
+
+  /* Toggle (switch) */
+  .cp-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--cp-text);
+    font-family: var(--cp-font);
+    cursor: pointer;
+    user-select: none;
+  }
+  .cp-toggle__track {
+    flex: none;
+    display: flex;
+    align-items: center;
+    width: 36px;
+    height: 20px;
+    padding: 2px;
+    border: 1px solid var(--cp-border);
+    border-radius: 999px;
+    background: var(--cp-track);
+  }
+  .cp-toggle[aria-checked='true'] .cp-toggle__track {
+    justify-content: flex-end;
+    background: var(--cp-accent);
+    border-color: var(--cp-accent);
+  }
+  .cp-toggle__knob {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--cp-surface);
+    box-shadow: var(--cp-shadow);
+  }
+
+  /* Dropdown */
+  .cp-dropdown {
+    min-width: 96px;
+    max-width: 100%;
+    padding: 5px 8px;
+    font-family: var(--cp-font);
+    font-size: var(--cp-text-sm);
+    color: var(--cp-text);
+    background: var(--cp-surface);
+    border: 1px solid var(--cp-border);
+    border-radius: var(--cp-radius-sm);
+  }
+  .cp-dropdown:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* XY pad */
+  .cp-xypad {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--cp-border);
+    border-radius: var(--cp-radius-sm);
+    background: var(--cp-surface-2);
+    touch-action: none;
+    user-select: none;
+    cursor: crosshair;
+  }
+  .cp-xypad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+      linear-gradient(to right, var(--cp-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--cp-border) 1px, transparent 1px);
+    background-size: 25% 25%;
+  }
+  .cp-xypad__handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--cp-surface);
+    border-radius: 50%;
+    background: var(--cp-accent);
+    box-shadow: var(--cp-shadow);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* Meter */
+  .cp-meter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+  }
+  .cp-meter__bar {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--cp-border);
+    border-radius: 999px;
+    background: var(--cp-track);
+  }
+  .cp-meter--vertical .cp-meter__bar {
+    width: 16px;
+    height: 120px;
+  }
+  .cp-meter--horizontal .cp-meter__bar {
+    width: 140px;
+    max-width: 100%;
+    height: 16px;
+  }
+  .cp-meter__fill {
+    position: absolute;
+    background: var(--cp-accent);
+  }
+  .cp-meter--vertical .cp-meter__fill {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  .cp-meter--horizontal .cp-meter__fill {
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
+  .cp-meter__fill[data-zone='warn'] {
+    background: var(--cp-warn);
+  }
+  .cp-meter__fill[data-zone='danger'] {
+    background: var(--cp-danger);
+  }
+
+  /* MIDI keyboard */
+  .cp-midi-keyboard {
+    --cp-key-white: var(--cp-surface);
+    --cp-key-black: var(--cp-text);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    touch-action: none;
+    user-select: none;
+  }
+  :root[data-theme='dark'] .cp-midi-keyboard {
+    --cp-key-white: var(--cp-border);
+    --cp-key-black: var(--cp-bg);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .cp-midi-keyboard {
+      --cp-key-white: var(--cp-border);
+      --cp-key-black: var(--cp-bg);
+    }
+  }
+  .cp-midi-keyboard__surface {
+    position: relative;
+    height: 96px;
+    min-width: 100%;
+  }
+  .cp-midi-keyboard__whites {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .cp-midi-key {
+    padding: 0;
+    font-family: var(--cp-mono);
+    cursor: pointer;
+  }
+  .cp-midi-key--white {
+    flex: 1 0 18px;
+    min-width: 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    border: 1px solid var(--cp-border);
+    border-right-width: 0;
+    border-radius: 0 0 4px 4px;
+    background: var(--cp-key-white);
+    color: var(--cp-muted);
+    font-size: 9px;
+  }
+  .cp-midi-key--white:last-child {
+    border-right-width: 1px;
+  }
+  .cp-midi-key--white[data-active='true'] {
+    background: var(--cp-accent);
+    color: var(--cp-on-accent);
+  }
+  .cp-midi-key__label {
+    pointer-events: none;
+  }
+  .cp-midi-keyboard__blacks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .cp-midi-key--black {
+    position: absolute;
+    top: 0;
+    height: 60%;
+    pointer-events: auto;
+    border: 1px solid var(--cp-border);
+    border-radius: 0 0 3px 3px;
+    background: var(--cp-key-black);
+  }
+  .cp-midi-key--black[data-active='true'] {
+    background: var(--cp-accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cp-slider__fill,
+    .cp-slider__thumb,
+    .cp-toggle__knob,
+    .cp-meter__fill,
+    .cp-xypad__handle,
+    .cp-checkbox__box,
+    .cp-button,
+    .cp-midi-key {
+      transition:
+        background-color 120ms ease,
+        border-color 120ms ease,
+        width 80ms linear,
+        height 80ms linear,
+        left 80ms linear,
+        bottom 80ms linear;
+    }
+  }
+
+  /* Typing a value: double-click the value text (or Enter on the control). */
+  .cp-value {
+    cursor: text;
+  }
+  .cp-value-input {
+    width: auto;
+    width: 9ch;
+    min-width: 0;
+    padding: 0 3px;
+    font-family: var(--cp-mono);
+    font-size: var(--cp-text-xs);
+    text-align: center;
+    color: var(--cp-text);
+    background: var(--cp-surface);
+    border: 1px solid var(--cp-accent);
+    border-radius: 0;
+    outline: none;
+  }
+  .cp-value-input[aria-invalid='true'] {
+    border-color: var(--cp-danger);
+    border-style: dashed;
+  }
+  /* In a text fader the field fills the 7-character value column. */
+  .cp-widget--text .cp-value-input {
+    width: 100%;
+    font-size: inherit;
+    text-align: right;
+  }
+}

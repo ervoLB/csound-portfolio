@@ -1,0 +1,87 @@
+/* Code editor tokens and styles (same `cp` layer as player.css). */
+@layer cp {
+  :root {
+    --cp-editor-font-size: 13px;
+    --cp-editor-bg: #fbfcfd;
+    --cp-editor-active-line: #f0f3f8;
+    --cp-editor-selection: #d4defa;
+    --cp-syn-keyword: #8a2fb3;
+    --cp-syn-tag: #6a4fb8;
+    --cp-syn-opcode: #1d55c4;
+    --cp-syn-variable: #8a5a00;
+    --cp-syn-string: #227a3e;
+    --cp-syn-number: #b4421a;
+    --cp-syn-comment: #6b7480;
+    --cp-syn-operator: #4f5866;
+    --cp-syn-meta: #7a4b00;
+    --cp-syn-meta-bg: #fff1cc;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --cp-editor-bg: #12151a;
+      --cp-editor-active-line: #1a1f27;
+      --cp-editor-selection: #2a3a63;
+      --cp-syn-keyword: #d49bf2;
+      --cp-syn-tag: #b7a3f5;
+      --cp-syn-opcode: #8fb1ff;
+      --cp-syn-variable: #e9c27a;
+      --cp-syn-string: #8fd6a2;
+      --cp-syn-number: #f3a07f;
+      --cp-syn-comment: #7d8794;
+      --cp-syn-operator: #aab3bf;
+      --cp-syn-meta: #f5cf73;
+      --cp-syn-meta-bg: #3a2f12;
+    }
+  }
+
+  :root[data-theme='dark'] {
+    --cp-editor-bg: #12151a;
+    --cp-editor-active-line: #1a1f27;
+    --cp-editor-selection: #2a3a63;
+    --cp-syn-keyword: #d49bf2;
+    --cp-syn-tag: #b7a3f5;
+    --cp-syn-opcode: #8fb1ff;
+    --cp-syn-variable: #e9c27a;
+    --cp-syn-string: #8fd6a2;
+    --cp-syn-number: #f3a07f;
+    --cp-syn-comment: #7d8794;
+    --cp-syn-operator: #aab3bf;
+    --cp-syn-meta: #f5cf73;
+    --cp-syn-meta-bg: #3a2f12;
+  }
+
+  .cp-editor {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--cp-editor-bg);
+  }
+  .cp-editor .cm-editor {
+    height: 100%;
+  }
+
+  .cp-editor-doc {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 420px;
+    padding: 10px 12px;
+    font-family: var(--cp-font);
+    font-size: var(--cp-text-sm);
+    line-height: 1.45;
+  }
+  .cp-editor-doc p {
+    margin: 0;
+    color: var(--cp-muted);
+  }
+  .cp-editor-doc code {
+    font-family: var(--cp-mono);
+    font-size: var(--cp-text-xs);
+    white-space: pre-wrap;
+    color: var(--cp-text);
+  }
+  .cp-editor-doc a {
+    color: var(--cp-accent);
+  }
+}

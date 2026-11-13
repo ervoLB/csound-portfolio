@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Play a CSD</title>
+    <meta name="description" content="Play any Csound CSD file from a link, in the browser." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232d58cf'/%3E%3Cpath d='M5 17c3-9 5-9 7 0s4 9 7 0 5-9 8 0' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <script>
+      try {
+        var t = localStorage.getItem('cp:theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="site-id">
+          <h1 class="site-title">Play a CSD</h1>
+          <p class="site-bio">
+            Paste a link to a <code>.csd</code> file (GitHub links work) to hear it here. The file runs in your browser, so only
+            open files you trust. The server must allow cross-site downloads (CORS); GitHub and most code hosts do.
+          </p>
+        </div>
+        <div class="site-header__side">
+          <nav class="site-links" aria-label="Links"><a class="site-link" href="./">Instruments</a></nav>
+          <button id="theme-toggle" type="button" class="site-theme" aria-label="Switch theme"></button>
+        </div>
+      </div>
+    </header>
+    <main class="site-main site-main--single">
+      <form id="src-form" class="src-form">
+        <label for="src-input" class="src-form__label">CSD link</label>
+        <div class="src-form__row">
+          <input id="src-input" name="src" type="url" inputmode="url" required placeholder="https://github.com/user/repo/blob/main/synth.csd" />
+          <button type="submit" class="src-form__button">Load</button>
+        </div>
+        <p id="src-error" class="src-form__error" role="alert" hidden></p>
+      </form>
+      <csound-player id="player"></csound-player>
+    </main>
+    <script type="module" src="./site/play.ts"></script>
+  </body>
+</html>

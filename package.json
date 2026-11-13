@@ -1,0 +1,61 @@
+{
+  "name": "personal-csound-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A static website template for publishing playable Csound instruments.",
+  "license": "MIT",
+  "homepage": "https://ervolb.github.io/csound-portfolio/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ervoLB/csound-portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ervoLB/csound-portfolio/issues"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "check": "npm run check:instruments && npm run typecheck && npm test",
+    "check:instruments": "vite-node scripts/check-instruments.ts",
+    "manifest": "vite-node scripts/build-manifest.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test --project=chromium",
+    "typecheck": "tsc --noEmit",
+    "fetch-wasm": "node scripts/fetch-wasm.mjs",
+    "test:e2e:all": "playwright test"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.20.4",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/lint": "^6.9.7",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@lezer/highlight": "^1.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "1.64.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.10",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.6",
+    "vite-node": "^3.2.4",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "version": "7.0.0",
+  "wasmUrl": "https://unpkg.com/@csound/wasm-bin@7.0.0/lib/csound.wasm",
+  "bytes": 7906487
+}

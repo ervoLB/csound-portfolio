@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Csound Instruments</title>
+    <meta name="description" content="Csound instruments you can play and edit in the browser." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232d58cf'/%3E%3Cpath d='M5 17c3-9 5-9 7 0s4 9 7 0 5-9 8 0' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <script>
+      // Apply the saved theme before the first paint.
+      try {
+        var t = localStorage.getItem('cp:theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="site-id">
+          <p id="site-author" class="site-author" hidden></p>
+          <div id="site-profile" class="site-profile" hidden>
+            <img id="site-avatar" class="site-profile__photo" alt="" hidden />
+            <span id="site-initials" class="site-profile__initials" aria-hidden="true" hidden></span>
+          </div>
+          <h1 id="site-title" class="site-title">Csound Instruments</h1>
+          <p id="site-bio" class="site-bio"></p>
+        </div>
+        <div class="site-header__side">
+          <nav id="site-links" class="site-links" aria-label="Links"></nav>
+          <button id="theme-toggle" type="button" class="site-theme" aria-label="Switch theme"></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="site-main" class="site-main">
+      <aside id="rack" class="rack" aria-labelledby="rack-title">
+        <div class="rack__bar">
+          <h2 id="rack-title" class="rack__title">
+            <button id="rack-toggle" type="button" class="rack__toggle" aria-expanded="true" aria-controls="rack-body">
+              <span class="rack__toggle-icon" aria-hidden="true"></span>
+              <span id="rack-title-text">Instruments</span> <span id="instrument-count" class="rack__count"></span>
+            </button>
+          </h2>
+        </div>
+        <div id="rack-body" class="rack__body">
+          <div class="rack__options">
+            <label class="rack__info"><input id="rack-info" type="checkbox" /> <span>info</span></label>
+            <details id="tag-details" class="filter" hidden>
+              <summary class="filter__summary">Filter<span id="filter-active" class="filter__active"></span></summary>
+              <div id="tag-filter" class="chips" role="group" aria-label="Filter by tag"></div>
+            </details>
+            <div id="rack-view" class="rack__views" role="group" aria-label="Show instruments as" hidden>
+              <button type="button" class="rack__view" data-view="list" aria-pressed="true">List</button>
+              <button type="button" class="rack__view" data-view="timeline" aria-pressed="false">Timeline</button>
+            </div>
+          </div>
+          <ol id="instrument-list" class="rack__list" aria-busy="true">
+            <li class="rack__placeholder">Loading instruments…</li>
+          </ol>
+          <p id="rack-readout" class="rack__readout" aria-hidden="true"></p>
+        </div>
+      </aside>
+
+      <section class="stage" aria-labelledby="instrument-title">
+        <div id="instrument-info" class="stage__info">
+          <h2 id="instrument-title" class="stage__title">&nbsp;</h2>
+        </div>
+        <csound-player id="player"></csound-player>
+      </section>
+    </main>
+
+    <noscript><p class="site-noscript">This site needs JavaScript to play the instruments.</p></noscript>
+    <script type="module" src="./site/main.ts"></script>
+  </body>
+</html>

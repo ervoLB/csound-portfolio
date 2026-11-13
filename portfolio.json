@@ -1,0 +1,12 @@
+{
+  "title": "Csound Instruments",
+  "author": "Your Name",
+  "avatar": "profile.png",
+  "bio": "Instruments I built in Csound. Pick one to hear it, play it with the controls, and read or change its code right here in the browser.",
+  "links": [],
+  "layout": "panel",
+  "player": {
+    "board": "right",
+    "editor": "open"
+  }
+}

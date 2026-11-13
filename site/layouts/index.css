@@ -1,0 +1,8 @@
+/* Layouts; each file is scoped to :root[data-layout='<name>']. */
+@import './panel.css';
+@import './manpage.css';
+
+/* play.html has a single column in every layout. */
+:root[data-layout] .site-main.site-main--single {
+  grid-template-columns: minmax(0, 1fr);
+}
